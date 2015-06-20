@@ -1,0 +1,30 @@
+{
+  "name": "contextualizer",
+  "version": "0.0.1",
+  "description": "Easily wraps node errors to provide more context to errors passed to callbacks",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aboutdotme/contextualizer.git"
+  },
+  "keywords": [
+    "error",
+    "exception",
+    "callback"
+  ],
+  "author": "Nigel Kibodeaux",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aboutdotme/contextualizer/issues"
+  },
+  "homepage": "https://github.com/aboutdotme/contextualizer",
+  "devDependencies": {
+    "mocha": "^2.2.5"
+  },
+  "dependencies": {
+    "verror": "^1.6.0"
+  }
+}

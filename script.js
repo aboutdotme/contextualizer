@@ -1,70 +1,66 @@
-'use strict'
+var addContext = require('./index')
+var express = require('express');
+var request = require('supertest')
 
-var fs = require('fs')
-var contextualizer = require('./index')
 
-
-// fakes writing the number to the database
-// But if the number starts with a 3, the database throws an error!
-function saveNumber(number, callback) {
+// This is a function that's called in a lot of different places in our app.
+// It'll send an error to the callback if one happens.
+function writeToDatabase(number, callback) {
     process.nextTick(function() {
-        var error = null
-        if (number.toString()[0] === '3') {
-            error = new Error('starts with a 3!')
-        }
-        callback(error)
-    })
-}
-
-// no context to error
-// this sucks because you don't know what called saveNumber
-function generateBigNumber(callback) {
-    var number = Math.random() * 1000
-
-    saveNumber(number, function(err) {
-        console.log('saved a big one: ', number)
-        callback(err)
-    })
-}
-
-// error message is augmented and it's convenient to write
-// BUT the error originates from contextualizer code instead of this function 
-function generateMediumNumber(callback) {
-    var number = Math.random() * 100
-    console.log('generating a medium one:', number)
-    saveNumber(number, contextualizer(callback, 'error in generateMediumNumber'))
-}
-
-// error message is augmented and this function is in the stack trace
-// this is the best choice
-function generateLittleNumber(callback) {
-    var number = Math.random() * 10
-
-    saveNumber(number, function(err) {
-        console.log('saved a little one: ', number)
-        callback(contextualizer(err, 'error in generateLittleNumber'))
+        callback(new Error('worst database ever'))
     })
 }
 
 
-// keep outputting numbers until we get an error
-function numberBlaster() {
-    function handleResult(err, number) {
-        if (err) {
-            // pretend to email error to someone
-            console.log(err)
-            console.log('message: ', err.message)
-            console.log('stack: ', err.stack)
+// Now here's a fake express app that will collect data from various places
+var app = express();
 
-            process.exit(1)
-        }
-    }
+/*** These endpoints have bad logging ***/
+    var badLogRouter = express.Router()
+    // Save data from the website
+    badLogRouter.post('/web/save', function(req, res, next) {
+        writeToDatabase(req.body, function(err) {
+            if (err) return next(err)
+            res.send('save complete')
+        })
+    })
+    // Save data from the API
+    badLogRouter.post('/api/save', function(req, res, next) {
+        writeToDatabase(req.body, function(err) {
+            if (err) return next(err)
+            res.send('save complete')
+        })
+    })
+    app.use('/BadLog', badLogRouter)
 
-    setInterval(function() {
-        generateBigNumber(handleResult)
-        generateMediumNumber(handleResult)
-        generateLittleNumber(handleResult)
-    }, 100)
-}
+/*** These endpoints have good logging ***/
+    var goodLogRouter = express.Router()
+    // Save data from the website
+    goodLogRouter.post('/web/save', function(req, res, next) {
+        writeToDatabase(req.body, function(err) {
+            if (err) return next(addContext(err))
+            res.send('save complete')
+        })
+    })
+    // Save data from the API
+    goodLogRouter.post('/api/save', function(req, res, next) {
+        writeToDatabase(req.body, function(err) {
+            var msg = 'error saving from API in good log router'
+            if (err) return next(addContext(err, msg))
+            res.send('save complete')
+        })
+    })
+    app.use('/GoodLog', goodLogRouter)
 
-numberBlaster()
+/*** Here's the error middleware where the errors get logged ***/
+app.use(function(err, req, res, next) {
+    console.log(err.stack)
+    console.log('-----------------------------')
+})
+
+
+
+request(app).post('/BadLog/web/save').end()
+request(app).post('/BadLog/api/save').end()
+request(app).post('/GoodLog/web/save').end()
+request(app).post('/GoodLog/api/save').end()

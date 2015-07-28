@@ -23,11 +23,19 @@ function wrap(errorOrFunction, message) {
         }
     }
 
-    // it's an error
+    // it's an error or just a string error message
     else {
         var error = errorOrFunction
 
+        // no problems here!
         if (!error) { return error }
+
+        // someone just passed a string, not a real error
+        // let's fix it
+        if (!(error instanceof Error)) {
+            message = error
+            error = null
+        }
 
         var options = {
             constructorOpt: wrap, // exclude this function from the stack trace

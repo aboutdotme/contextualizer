@@ -26,6 +26,12 @@ describe('index.js', function() {
             assert(wrapped_e.cause())
         })
 
+        it('should create a VError if passed a string', function() {
+            var e = 'just a string'
+            var wrapped_e = contextulizer(e)
+            assert(wrapped_e instanceof Error)
+        })
+
         it('should work for multiple levels of wrapping', function() {
             var e = new Error('inner error')
             var wrapped_e = contextulizer(e, 'first wrapper')

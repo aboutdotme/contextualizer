@@ -41,10 +41,10 @@ function dataRequest(input, callback) {
 ## Usage
 **`contextualizer(`**`error`*`[, message]`***`)`**
 
-* `error` (*Error*) - The error to wrap. In the event of no error (falsy value), that same falsy value will be returned.
+* `error` (*Error|Function*) - The error to wrap. In the event of no error (falsy value), that same falsy value will be returned. Alternatively, you can pass the entire callback function in here and it will be wrapped. See [not recommended but better than nothing](#Not recommended but better than nothing) below.
 * `message` (*string*) - An optional message to prepend to error message of the
   wrapped error. If nothing is passed, the default of `[error wrapper]` will be
-  used.
+  used. If the first argument is a function, an error will be thrown if there is no message passed.
 
 ## Examples
 
@@ -60,7 +60,7 @@ var request = require('supertest')
 
 // This is a function that's called in a lot of different places in our app.
 // It'll send an error to the callback if one happens.
-function writeToDatabase(number, callback) {
+function writeToDatabase(data, callback) {
     process.nextTick(function() {
         callback(new Error('worst database ever'))
     })
@@ -135,4 +135,35 @@ VError: error saving from API in good log router: worst database ever
     at /Users/nigel/about.me/contextualizer/script.js:49:34
     at /Users/nigel/about.me/contextualizer/script.js:10:9
     at process._tickCallback (node.js:355:11)
+```
+
+## Not recommended but better than nothing
+
+You can get lazy and pass the whole callback, not just the error, to contextualizer like this:
+```javascript
+function databaseLookup(input, callback) {
+    process.nextTick(function databaseInnards() {
+        callback(new Error('this database is horrible'))
+    })
+}
+
+function dataRequest(input, callback) {
+    databaseLookup(input, function(err, data) {
+        // adds no context to errors, let's comment it out and not do it
+        // databaseLookup(input, callback)
+
+        // this is a little better
+        databaseLookup(input, addContext(callback, 'error in dataRequest'))
+    });
+}
+```
+This is convenient but instead of `getUserData` being in the stack trace, code within contextualizer will be the top frame. The line where you wrapped the callback is nowhere to be found. However, the error message will be prepended with your message. Like this:
+```
+VError: error in dataRequest: this database is horrible
+    at contextualizerWrapper (/Users/nigel/about.me/contextualizer/index.js:21:28)
+    at databaseInnards (/Users/nigel/about.me/contextualizer/script.js:73:9)
+    at process._tickCallback (node.js:355:11)
+    at Function.Module.runMain (module.js:503:11)
+    at startup (node.js:129:16)
+    at node.js:814:3
 ```

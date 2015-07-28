@@ -41,7 +41,7 @@ function dataRequest(input, callback) {
 ## Usage
 **`contextualizer(`**`error`*`[, message]`***`)`**
 
-* `error` (*Error|Function*) - The error to wrap. In the event of no error (falsy value), that same falsy value will be returned. Alternatively, you can pass the entire callback function in here and it will be wrapped. See [not recommended but better than nothing](#Not recommended but better than nothing) below.
+* `error` (*Error|Function*) - The error to wrap. In the event of no error (falsy value), that same falsy value will be returned. Alternatively, you can pass the entire callback function in here and it will be wrapped. See [not recommended but better than nothing](#Not-recommended-but-better-than-nothing) below.
 * `message` (*string*) - An optional message to prepend to error message of the
   wrapped error. If nothing is passed, the default of `[error wrapper]` will be
   used. If the first argument is a function, an error will be thrown if there is no message passed.

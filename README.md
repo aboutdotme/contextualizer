@@ -4,7 +4,7 @@ Easily wraps node errors to provide more context to errors passed to callbacks.
 The problem:
 When you have an error passed up through various levels of callbacks, you can't tell which function called the lower level function. TODO: example that makes sense here
 
-This is a thin wrapper on [verror] (https://github.com/davepacheco/node-verror) that allows you to write this:
+This is a thin wrapper on [verror] (https://github.com/davepacheco/node-verror) (recommended here: https://www.joyent.com/developers/node/design/errors) that allows you to write this:
 ```
 var VError = require('verror');
 

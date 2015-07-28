@@ -1,13 +1,13 @@
 # Contextualizer
 Easily wraps node errors to provide more context to errors passed to callbacks.
 
-#### Installation
+### Installation
 
 ```bash
 $ npm install contextualizer
 ```
 
-#### The Problem
+### The Problem
 
 When you have an error passed up through various levels of callbacks, you can't tell which function called the lower level function. 
 
@@ -38,7 +38,7 @@ function dataRequest(input, callback) {
     });
 }
 ```
-#### Usage
+## Usage
 **`contextualizer(`**`error`*`[, message]`***`)`**
 
 * `error` (*Error*) - The error to wrap. In the event of no error (falsy value), that same falsy value will be returned.
@@ -46,7 +46,7 @@ function dataRequest(input, callback) {
   wrapped error. If nothing is passed, the default of `[error wrapper]` will be
   used.
 
-#### Examples
+## Examples
 
 Here's an example of how you might use it in an express app.
 The first 2 endpoints don't use contextualizer, the second do.

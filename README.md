@@ -41,7 +41,7 @@ function dataRequest(input, callback) {
 ## Usage
 **`contextualizer(`**`error`*`[, message]`***`)`**
 
-* `error` (*Error|Function*) - The error to wrap. In the event of no error (falsy value), that same falsy value will be returned. Alternatively, you can pass the entire callback function in here and it will be wrapped. See [not recommended but better than nothing](#Not-recommended-but-better-than-nothing) below.
+* `error` (*Error|Function*) - The error to wrap. In the event of no error (falsy value), that same falsy value will be returned. Alternatively, you can pass the entire callback function in here and it will be wrapped. See [not recommended but better than nothing](#not-recommended-but-better-than-nothing) below.
 * `message` (*string*) - An optional message to prepend to error message of the
   wrapped error. If nothing is passed, the default of `[error wrapper]` will be
   used. If the first argument is a function, an error will be thrown if there is no message passed.
@@ -141,12 +141,14 @@ VError: error saving from API in good log router: worst database ever
 
 You can get lazy and pass the whole callback, not just the error, to contextualizer like this:
 ```javascript
+// fake library function
 function databaseLookup(input, callback) {
     process.nextTick(function databaseInnards() {
         callback(new Error('this database is horrible'))
     })
 }
 
+// the function in which we want to add context to errors
 function dataRequest(input, callback) {
     databaseLookup(input, function(err, data) {
         // adds no context to errors, let's comment it out and not do it

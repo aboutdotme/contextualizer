@@ -7,10 +7,13 @@ Easily wraps node errors to provide more context to errors passed to callbacks.
 $ npm install contextualizer
 ```
 
-The problem:
-When you have an error passed up through various levels of callbacks, you can't tell which function called the lower level function. TODO: example that makes sense here
+#### The Problem
 
-This is a thin wrapper on [verror] (https://github.com/davepacheco/node-verror) (recommended here: https://www.joyent.com/developers/node/design/errors) that allows you to write this:
+When you have an error passed up through various levels of callbacks, you can't tell which function called the lower level function. 
+
+### The Solution
+
+You need to wrap the error. Contextualizer is a thin wrapper on [verror] (https://github.com/davepacheco/node-verror) (recommended here: https://www.joyent.com/developers/node/design/errors) that allows you to write this:
 ```javascript
 var VError = require('verror');
 
@@ -26,7 +29,7 @@ function dataRequest(input, callback) {
 ```
 Like this:
 ```javascript
-var addContext = require('contextualizer');
+var addContext = require('contextualizer')
 
 function dataRequest(input, callback) {
     databaseLookup(input, function(err, data) {
@@ -35,21 +38,19 @@ function dataRequest(input, callback) {
     });
 }
 ```
-
 #### Usage
+**`contextualizer(`**`error`*`[, message]`***`)`**
 
-**`addContext(`**`error`*`[, message]`***`)`**
-
-* `error` (*Error*) - The error to wrap. If no error is passed, whatever
-  you do pass will be returned
+* `error` (*Error*) - The error to wrap. In the event of no error (falsy value), that same falsy value will be returned.
 * `message` (*string*) - An optional message to prepend to error message of the
-  wrapped error. If nothin is passed, the default of `[error wrapper]` will be
+  wrapped error. If nothing is passed, the default of `[error wrapper]` will be
   used.
 
 #### Examples
 
 Here's an example of how you might use it in an express app.
 The first 2 endpoints don't use contextualizer, the second do.
+Note that I'm assigning the "contextualizer" function to `addContext`
 
 ```javascript
 var addContext = require('contextulizer')
@@ -114,20 +115,20 @@ app.use(function(err, req, res, next) {
 ```
 
 Errors returned from the first 2 endpoints look exactly the same in the logs and
-don't contain any troubleshooting context.
+don't contain any context that can be helpful for troubleshooting.
 ```javascript
 Error: worst database ever
     at /Users/nigel/about.me/contextualizer/script.js:10:18
     at process._tickCallback (node.js:355:11)
 ```
-The errors returned from /GoodLog/web/save have the endpoint in the stack trace
+The errors returned from `/GoodLog/web/save` have the endpoint in the stack trace
 ```
 VError: [error wrapper]: worst database ever
     at /Users/nigel/about.me/contextualizer/script.js:41:34
     at /Users/nigel/about.me/contextualizer/script.js:10:9
     at process._tickCallback (node.js:355:11)
 ```
-And the errors from /GoodLog/api/save take it a step further and have a custom
+And the errors from `/GoodLog/api/save` take it a step further and have a custom
 error message prepended to the passed error message
 ```
 VError: error saving from API in good log router: worst database ever

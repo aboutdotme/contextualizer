@@ -33,8 +33,7 @@ var addContext = require('contextualizer')
 
 function dataRequest(input, callback) {
     databaseLookup(input, function(err, data) {
-        var possible_err = addContext(err, 'error in dataRequest')
-        callback(possible_err, data)
+        callback(addContext(err, 'error in dataRequest'), data)
     });
 }
 ```

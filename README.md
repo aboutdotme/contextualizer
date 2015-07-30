@@ -1,5 +1,5 @@
 # Contextualizer
-Easily wraps node errors to provide more context to errors passed to callbacks.
+Easily wraps errors passed to callbacks to provide more context.
 
 ### Installation
 
@@ -20,7 +20,7 @@ var VError = require('verror');
 function dataRequest(input, callback) {
     databaseLookup(input, function(err, data) {
         if (err) {
-            var wrapped_err = new VError(err, 'error in databaseLookup')
+            var wrapped_err = new VError(err, 'error in dataRequest')
             return callback(wrapped_err)
         }
         callback(null, data)
@@ -33,7 +33,7 @@ var addContext = require('contextualizer')
 
 function dataRequest(input, callback) {
     databaseLookup(input, function(err, data) {
-        var possible_err = addContext(err, 'error in databaseLookup')
+        var possible_err = addContext(err, 'error in dataRequest')
         callback(possible_err, data)
     });
 }

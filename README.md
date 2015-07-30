@@ -149,7 +149,7 @@ function databaseLookup(input, callback) {
 
 // the function in which we want to add context to errors
 function dataRequest(input, callback) {
-    databaseLookup(input, function(err, data) {
+    databaseLookup(input, function handleResponse(err, data) {
         // adds no context to errors, let's comment it out and not do it
         // databaseLookup(input, callback)
 
@@ -158,7 +158,7 @@ function dataRequest(input, callback) {
     });
 }
 ```
-This is convenient but instead of `getUserData` being in the stack trace, code within contextualizer will be the top frame. The line where you wrapped the callback is nowhere to be found. However, the error message will be prepended with your message. Like this:
+This is convenient but instead of `handleResponse` being in the stack trace, code within contextualizer will be the top frame. The line where you wrapped the callback is nowhere to be found. However, the error message will be prepended with your message. Like this:
 ```
 VError: error in dataRequest: this database is horrible
     at contextualizerWrapper (/Users/nigel/about.me/contextualizer/index.js:21:28)

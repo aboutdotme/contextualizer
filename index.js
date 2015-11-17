@@ -40,6 +40,10 @@ function wrap(errorOrFunction, message) {
             else if (typeof(message.toString) === 'function')
                 message = message.toString()
 
+            // % in the message will cause errors in Verror because it's
+            // running it through sprintf
+            message = message.replace('%', '%%')
+
             error = null
         }
 

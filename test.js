@@ -26,6 +26,14 @@ describe('index.js', function() {
             assert(wrapped_e.cause())
         })
 
+        it('should create a VError if passed an error and message', function() {
+            var e = new Error('inner error')
+            var desc = 'more description'
+            var wrapped_e = contextulizer(e, desc)
+            assert(wrapped_e.cause())
+            assert(wrapped_e.toString().indexOf(desc) > -1)
+        })
+
         it('should create a VError if passed a string', function() {
             var e = 'just a string'
             var wrapped_e = contextulizer(e)
@@ -47,6 +55,12 @@ describe('index.js', function() {
         it('should create a VError if passed a number', function() {
             var e = 2345
             var wrapped_e = contextulizer(e)
+            assert(wrapped_e instanceof Error)
+        })
+
+        it('should work with a "error" that is a string containing a %',
+                function() {
+            var wrapped_e = contextulizer('%d')
             assert(wrapped_e instanceof Error)
         })
 
@@ -125,7 +139,7 @@ describe('index.js', function() {
             }
 
             async4(function(err) {
-                console.log(err.stack)
+                // console.log(err.stack)
                 var lines = err.stack.split('\n').length
                 assert.equal(lines, 6)
                 done()

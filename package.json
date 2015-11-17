@@ -1,6 +1,6 @@
 {
   "name": "contextualizer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Easily wraps node errors to provide more context to errors passed to callbacks",
   "main": "index.js",
   "scripts": {

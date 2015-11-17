@@ -34,6 +34,12 @@ function wrap(errorOrFunction, message) {
         // let's fix it
         if (!(error instanceof Error)) {
             message = error
+
+            if (typeof(error) === 'object')
+                message = JSON.stringify(message)
+            else if (typeof(message.toString) === 'function')
+                message = message.toString()
+
             error = null
         }
 

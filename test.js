@@ -32,6 +32,24 @@ describe('index.js', function() {
             assert(wrapped_e instanceof Error)
         })
 
+        it('should create a VError if passed an object', function() {
+            var e = { whatever: 'this is stupid' }
+            var wrapped_e = contextulizer(e)
+            assert(wrapped_e instanceof Error)
+        })
+
+        it('should create a VError if passed an array', function() {
+            var e = [{ whatever: 'this is stupid' }]
+            var wrapped_e = contextulizer(e)
+            assert(wrapped_e instanceof Error)
+        })
+
+        it('should create a VError if passed a number', function() {
+            var e = 2345
+            var wrapped_e = contextulizer(e)
+            assert(wrapped_e instanceof Error)
+        })
+
         it('should work for multiple levels of wrapping', function() {
             var e = new Error('inner error')
             var wrapped_e = contextulizer(e, 'first wrapper')
@@ -107,7 +125,7 @@ describe('index.js', function() {
             }
 
             async4(function(err) {
-                // console.log(err.stack)
+                console.log(err.stack)
                 var lines = err.stack.split('\n').length
                 assert.equal(lines, 6)
                 done()

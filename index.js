@@ -42,7 +42,7 @@ function wrap(errorOrFunction, message) {
 
             // % in the message will cause errors in Verror because it's
             // running it through sprintf
-            message = message.replace('%', '%%')
+            message = message.replace(/%/g, '%%')
 
             error = null
         }

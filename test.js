@@ -60,7 +60,7 @@ describe('index.js', function() {
 
         it('should work with a "error" that is a string containing a %',
                 function() {
-            var wrapped_e = contextulizer('%d')
+            var wrapped_e = contextulizer('%d wofijwef % % % sdfd%%%sadf%')
             assert(wrapped_e instanceof Error)
         })
 

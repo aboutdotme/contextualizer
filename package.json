@@ -4,7 +4,10 @@
   "description": "Easily wraps node errors to provide more context to errors passed to callbacks",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "pretest": "jshint --exclude node_modules",
+    "test": "mocha",
+    "preversion": "npm test",
+    "postpublish": "git push && git push --tags"
   },
   "repository": {
     "type": "git",
@@ -23,8 +26,7 @@
   "homepage": "https://github.com/aboutdotme/contextualizer",
   "devDependencies": {
     "express": "^4.13.1",
-    "grunt": "^0.4.5",
-    "grunt-release": "^0.13.0",
+    "jshint": "^2.8.0",
     "mocha": "^2.2.5",
     "supertest": "^1.0.1"
   },

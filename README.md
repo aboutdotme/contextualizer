@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/aboutdotme/contextualizer.svg)](https://travis-ci.org/aboutdotme/contextualizer)
+
 # Contextualizer
 Easily wraps errors passed to callbacks to provide more context.
 
@@ -9,7 +11,7 @@ $ npm install contextualizer
 
 ### The Problem
 
-When you have an error passed up through various levels of callbacks, you can't tell which function called the lower level function. 
+When you have an error passed up through various levels of callbacks, you can't tell which function called the lower level function.
 
 ### The Solution
 

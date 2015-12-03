@@ -141,7 +141,7 @@ describe('index.js', function() {
             async4(function(err) {
                 // console.log(err.stack)
                 var lines = err.stack.split('\n').length
-                assert.equal(lines, 6)
+                assert.equal(lines, 7)
                 done()
             })
         })

@@ -26,6 +26,7 @@
   "homepage": "https://github.com/aboutdotme/contextualizer",
   "devDependencies": {
     "express": "^4.13.1",
+    "jshint": "^2.8.0",
     "mocha": "^2.2.5",
     "supertest": "^1.0.1"
   },

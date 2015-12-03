@@ -140,6 +140,8 @@ describe('index.js', function() {
 
             async4(function(err) {
                 // console.log(err.stack)
+                var expected_lines = 6
+                if (process.versions.node > '4') expected_lines++
                 var lines = err.stack.split('\n').length
                 assert.equal(lines, 7)
                 done()
